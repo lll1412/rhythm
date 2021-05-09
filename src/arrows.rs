@@ -73,7 +73,7 @@ fn spawn_arrows(
     time: Res<Time>,
 ) {
     // 从启动到现在的时间（减3 是因为歌曲在游戏开始3秒后播放）
-    let sec = time.seconds_since_startup() - 3.0;
+    let sec = time.seconds_since_startup() - DELAY_SONG;
     // 两帧时间差
     let delta = time.delta_seconds_f64();
     // 上一帧时间
