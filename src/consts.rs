@@ -3,7 +3,6 @@ pub const WINDOW_WIDTH: f32 = 800.0;
 /// 游戏窗口高度
 pub const WINDOW_HEIGHT: f32 = 600.0;
 
-
 /// 箭头移动速度
 pub const BASE_SPEED: f32 = 200.0;
 
@@ -15,7 +14,6 @@ pub const SPAWN_POSITION: f32 = -400.0;
 
 /// 目标箭头 横坐标
 pub const TARGET_POSITION: f32 = 200.0;
-
 
 /// 匹配箭头时的误差阈值
 pub const THRESHOLD: f32 = 20.0;
