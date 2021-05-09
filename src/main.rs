@@ -2,11 +2,13 @@ use bevy::{input::system::exit_on_esc_system, prelude::*};
 
 use arrows::ArrowsPlugin;
 use consts::{WINDOW_HEIGHT, WINDOW_WIDTH};
+use score::ScoreResource;
 use types::SongConfig;
 use ui::UIPlugin;
 
 mod arrows;
 mod consts;
+mod score;
 mod types;
 mod ui;
 
@@ -20,6 +22,7 @@ fn main() {
             ..Default::default()
         })
         .insert_resource(SongConfig::load_config())
+        .init_resource::<ScoreResource>()
         .add_state(AppState::Game)
         .add_startup_system(setup.system())
         .add_system(exit_on_esc_system.system())

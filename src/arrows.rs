@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::consts::*;
+use crate::score::ScoreResource;
 use crate::types::*;
 use crate::AppState;
 
@@ -107,15 +108,20 @@ fn despawn_arrows(
     mut cmd: Commands,
     arrows: Query<(Entity, &Transform, &Arrow)>,
     key_input: Res<Input<KeyCode>>,
+    mut score: ResMut<ScoreResource>,
 ) {
     arrows.iter().for_each(|(entity, transform, arrow)| {
         let pos = transform.translation.x;
         // 检测箭头是否在目标箭头范围内被点击 或者  是否离开屏幕
         if (TARGET_POSITION - THRESHOLD..=TARGET_POSITION + THRESHOLD).contains(&pos)
             && arrow.direction.key_just_pressed(&key_input)
-            || pos >= 2.0 * TARGET_POSITION
         {
+            score.increase_correct(TARGET_POSITION - pos);
             cmd.entity(entity).despawn();
+        }
+        if pos >= 2.0 * TARGET_POSITION {
+            cmd.entity(entity).despawn();
+            score.increase_fails();
         }
     });
 }
