@@ -1,7 +1,3 @@
-use std::fmt::Formatter;
-
-use bevy::prelude::*;
-
 use crate::consts::THRESHOLD;
 
 #[derive(Default)]
@@ -27,19 +23,9 @@ impl ScoreResource {
     pub fn increase_fails(&mut self) {
         self.fails += 1;
     }
-    /// fields getter
-    pub fn score(&self) -> usize {
-        self.score
-    }
-    pub fn corrects(&self) -> usize {
-        self.corrects
-    }
-    pub fn fails(&self) -> usize {
-        self.fails
-    }
 }
 impl std::fmt::Display for ScoreResource {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "Score: {}. Corrects: {}. Fails: {}.",

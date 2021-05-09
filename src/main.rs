@@ -21,7 +21,6 @@ fn main() {
             height: WINDOW_HEIGHT,
             ..Default::default()
         })
-        .insert_resource(SongConfig::load_config())
         .init_resource::<ScoreResource>()
         .add_state(AppState::Game)
         .add_startup_system(setup.system())
@@ -32,14 +31,17 @@ fn main() {
         .run();
 }
 
-fn setup(mut cmd: Commands) {
+fn setup(mut cmd: Commands, asset_server: Res<AssetServer>) {
     // 2d 正交相机
     cmd.spawn_bundle(OrthographicCameraBundle::new_2d());
     // ui 相机
     cmd.spawn_bundle(UiCameraBundle::default());
+    // 加载歌曲配置文件
+    let config = SongConfig::load_config("test.toml", &asset_server);
+    cmd.insert_resource(config);
 }
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 enum AppState {
-    Menu,
+    // Menu,
     Game,
 }
