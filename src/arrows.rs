@@ -111,7 +111,7 @@ fn despawn_arrows(
     key_input: Res<Input<KeyCode>>,
     mut score: ResMut<ScoreResource>,
 ) {
-    arrows.iter().for_each(|(entity, transform, arrow)| {
+    arrows.for_each(|(entity, transform, arrow)| {
         let pos = transform.translation.x;
         // 检测箭头是否在目标箭头范围内被点击
         if (TARGET_POSITION - THRESHOLD..=TARGET_POSITION + THRESHOLD).contains(&pos)
@@ -128,8 +128,8 @@ fn despawn_arrows(
     });
 }
 /// 移动箭头
-fn move_arrows(time: Res<Time>, mut arrows: Query<(&mut Transform, &Arrow)>) {
-    arrows.iter_mut().for_each(|(mut transform, arrow)| {
+fn move_arrows(time: Res<Time>, arrows: Query<(&mut Transform, &Arrow)>) {
+    arrows.for_each_mut(|(mut transform, arrow)| {
         transform.translation.x += time.delta_seconds() * arrow.speed.value();
 
         let distance_after_target = transform.translation.x - (TARGET_POSITION + THRESHOLD);
