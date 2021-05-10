@@ -23,14 +23,17 @@ pub fn setup_background(
     let render_pipelines =
         RenderPipelines::from_pipelines(vec![RenderPipeline::new(pipeline_handle)]);
 
-    let transform =
-        Transform::from_scale(Vec3::new(window.width, window.height, 1.0));
+    let transform = Transform::from_scale(Vec3::new(window.width, window.height, 1.0));
     cmd.spawn_bundle(SpriteBundle {
         render_pipelines,
         transform,
         ..Default::default()
     })
-    .insert(Background);
+    .insert(Background)
+    .insert(ShaderInputs {
+        time: 0.0,
+        resolution: Vec2::new(window.width / window.height, 1.0),
+    });
 }
 
 pub fn update_background_size(

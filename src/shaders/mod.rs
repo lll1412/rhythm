@@ -16,15 +16,20 @@ pub struct ShadersPlugin;
 impl Plugin for ShadersPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system_set(
-            SystemSet::on_enter(AppState::Game).with_system(setup_background.system()),
+            SystemSet::on_enter(AppState::Game)
+                .with_system(setup_background.system())
+                .with_system(setup_render_graph.system()),
         )
         .add_system_set(
-            SystemSet::on_update(AppState::Game).with_system(update_background_size.system()),
+            SystemSet::on_update(AppState::Game)
+                .with_system(update_background_size.system())
+                .with_system(update_time.system())
+                .with_system(update_resolution.system()),
         );
     }
 }
 
-/// bevy默认没有这两个资源，自己加一下
+/// 传递这些变量到shader中使用
 #[derive(RenderResources)]
 pub struct ShaderInputs {
     time: f32,
@@ -47,5 +52,7 @@ fn update_resolution(mut resize_event: EventReader<WindowResized>, q: Query<&mut
 /// 配置
 fn setup_render_graph(mut render_graph: ResMut<RenderGraph>) {
     render_graph.add_system_node("inputs", RenderResourcesNode::<ShaderInputs>::new(true));
-    render_graph.add_node_edge("inputs", base::node::MAIN_PASS).unwrap();
+    render_graph
+        .add_node_edge("inputs", base::node::MAIN_PASS)
+        .unwrap();
 }
