@@ -6,10 +6,12 @@ use bevy::render::shader::{ShaderStage, ShaderStages};
 use bevy::window::WindowResized;
 
 use background::*;
+use target_arrows::*;
 
 use crate::AppState;
 
 mod background;
+mod target_arrows;
 
 pub struct ShadersPlugin;
 
@@ -18,13 +20,15 @@ impl Plugin for ShadersPlugin {
         app.add_system_set(
             SystemSet::on_enter(AppState::Game)
                 .with_system(setup_background.system())
-                .with_system(setup_render_graph.system()),
+                .with_system(setup_render_graph.system())
+                .with_system(setup_target_arrows.system()),
         )
         .add_system_set(
             SystemSet::on_update(AppState::Game)
                 .with_system(update_background_size.system())
                 .with_system(update_time.system())
-                .with_system(update_resolution.system()),
+                .with_system(update_resolution.system())
+                .with_system(correct_event.system()),
         );
     }
 }

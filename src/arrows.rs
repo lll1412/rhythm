@@ -1,15 +1,16 @@
 use bevy::prelude::*;
 
-use crate::AppState;
 use crate::consts::*;
 use crate::score::ScoreResource;
 use crate::types::*;
+use crate::AppState;
 
 pub struct ArrowsPlugin;
 
 impl Plugin for ArrowsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.init_resource::<ArrowMaterialResource>()
+            .add_event::<CorrectArrowEvent>()
             .add_system_set(
                 SystemSet::on_enter(AppState::Game).with_system(setup_target_arrows.system()),
             )
@@ -110,6 +111,7 @@ fn despawn_arrows(
     arrows: Query<(Entity, &Transform, &Arrow)>,
     key_input: Res<Input<KeyCode>>,
     mut score: ResMut<ScoreResource>,
+    mut correct_event: EventWriter<CorrectArrowEvent>,
 ) {
     arrows.for_each(|(entity, transform, arrow)| {
         let pos = transform.translation.x;
@@ -117,8 +119,12 @@ fn despawn_arrows(
         if (TARGET_POSITION - THRESHOLD..=TARGET_POSITION + THRESHOLD).contains(&pos)
             && arrow.direction.key_just_pressed(&key_input)
         {
-            score.increase_correct(TARGET_POSITION - pos);
+            let points = score.increase_correct(TARGET_POSITION - pos);
             cmd.entity(entity).despawn();
+            correct_event.send(CorrectArrowEvent {
+                direction: arrow.direction,
+                points,
+            });
         }
         // 是否离开屏幕
         if pos >= 2.0 * TARGET_POSITION {
@@ -181,4 +187,10 @@ fn spawn_arrow_sprite(
         transform,
         ..Default::default()
     }
+}
+
+/// Event struct
+pub struct CorrectArrowEvent {
+    pub direction: Directions,
+    pub points: usize,
 }

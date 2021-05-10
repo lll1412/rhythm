@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
+use crate::consts::DELAY_SONG;
 use crate::score::ScoreResource;
 use crate::AppState;
-use crate::consts::DELAY_SONG;
 
 pub struct UIPlugin;
 
