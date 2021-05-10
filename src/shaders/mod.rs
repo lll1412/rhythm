@@ -36,9 +36,10 @@ impl Plugin for ShadersPlugin {
 /// 传递这些变量到shader中使用
 #[derive(RenderResources)]
 pub struct ShaderInputs {
-    time: f32,
     // 时间
-    resolution: Vec2, // 分辨率
+    time: f32,
+    // 分辨率
+    resolution: Vec2,
 }
 /// 更新时间
 fn update_time(time: Res<Time>, nodes: Query<&mut ShaderInputs>) {

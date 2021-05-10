@@ -123,13 +123,6 @@ impl SongConfig {
     }
 }
 
-impl FromWorld for SongConfig {
-    fn from_world(world: &mut World) -> Self {
-        let assets_server = world.get_resource::<AssetServer>().unwrap();
-        Self::load_config("test.toml", &assets_server)
-    }
-}
-
 #[derive(Debug, Deserialize)]
 struct SongConfigToml {
     pub name: String,
