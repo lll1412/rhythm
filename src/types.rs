@@ -60,7 +60,7 @@ impl Speed {
         BASE_SPEED * self.multiplier()
     }
     /// 速度倍数
-    fn multiplier(&self) -> f32 {
+    pub fn multiplier(&self) -> f32 {
         match self {
             Speed::Slow => 1.0,
             Speed::Medium => 1.2,

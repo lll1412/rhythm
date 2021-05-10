@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
+use crate::AppState;
 use crate::consts::*;
 use crate::score::ScoreResource;
 use crate::types::*;
-use crate::AppState;
 
 pub struct ArrowsPlugin;
 
@@ -82,6 +82,7 @@ fn spawn_arrows(
     let mut remove_counter = 0;
     for arrow in &song_config.arrows {
         // 如果生成时间介于上一帧和这一帧之间
+        // println!("sec:{}, delta:{}, sec_last:{}, spawn_time:{}", sec, delta, sec_last, arrow.spawn_time);
         if arrow.spawn_time > sec_last && arrow.spawn_time <= sec {
             remove_counter += 1;
 
@@ -112,13 +113,14 @@ fn despawn_arrows(
 ) {
     arrows.iter().for_each(|(entity, transform, arrow)| {
         let pos = transform.translation.x;
-        // 检测箭头是否在目标箭头范围内被点击 或者  是否离开屏幕
+        // 检测箭头是否在目标箭头范围内被点击
         if (TARGET_POSITION - THRESHOLD..=TARGET_POSITION + THRESHOLD).contains(&pos)
             && arrow.direction.key_just_pressed(&key_input)
         {
             score.increase_correct(TARGET_POSITION - pos);
             cmd.entity(entity).despawn();
         }
+        // 是否离开屏幕
         if pos >= 2.0 * TARGET_POSITION {
             cmd.entity(entity).despawn();
             score.increase_fails();
@@ -129,6 +131,19 @@ fn despawn_arrows(
 fn move_arrows(time: Res<Time>, mut arrows: Query<(&mut Transform, &Arrow)>) {
     arrows.iter_mut().for_each(|(mut transform, arrow)| {
         transform.translation.x += time.delta_seconds() * arrow.speed.value();
+
+        let distance_after_target = transform.translation.x - (TARGET_POSITION + THRESHOLD);
+        if distance_after_target >= 0.02 {
+            // 下移
+            transform.translation.y -= time.delta_seconds() * distance_after_target * 2.0;
+            // 旋转
+            transform.rotate(Quat::from_rotation_z(
+                -distance_after_target * arrow.speed.multiplier() / 720.0,
+            ));
+            // 缩小
+            let scale = (1.0 - distance_after_target / 300.0).max(0.2);
+            transform.scale = Vec3::splat(scale);
+        }
     });
 }
 

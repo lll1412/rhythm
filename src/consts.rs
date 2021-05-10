@@ -22,4 +22,4 @@ pub const THRESHOLD: f32 = 20.0;
 pub const DISTANCE: f32 = TARGET_POSITION - SPAWN_POSITION;
 
 /// 延迟播放时间
-pub const DELAY_SONG: f64 = 3.0;
+pub const DELAY_SONG: f64 = 4.0;
