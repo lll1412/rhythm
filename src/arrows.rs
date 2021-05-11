@@ -2,9 +2,9 @@ use bevy::prelude::*;
 
 use crate::consts::*;
 use crate::score::ScoreResource;
+use crate::time::ControlledTime;
 use crate::types::*;
 use crate::AppState;
-use crate::time::ControlledTime;
 
 pub struct ArrowsPlugin;
 
@@ -20,6 +20,9 @@ impl Plugin for ArrowsPlugin {
                     .with_system(spawn_arrows.system()) // 生成箭头
                     .with_system(move_arrows.system()) // 箭头移动
                     .with_system(despawn_arrows.system()), // 移除箭头
+            )
+            .add_system_set(
+                SystemSet::on_exit(AppState::Game).with_system(despawn_all_arrows.system()),
             );
     }
 }
@@ -160,11 +163,8 @@ struct TargetArrow;
 fn setup_target_arrows(mut cmd: Commands, materials: Res<ArrowMaterialResource>) {
     let directions = Directions::directions();
     for direction in directions.iter() {
-        let sprite_bundle = spawn_arrow_sprite(
-            materials.border_texture.clone(),
-            direction,
-            TARGET_POSITION,
-        );
+        let sprite_bundle =
+            spawn_arrow_sprite(materials.border_texture.clone(), direction, TARGET_POSITION);
         cmd.spawn_bundle(sprite_bundle).insert(TargetArrow);
     }
 }
@@ -193,4 +193,9 @@ fn spawn_arrow_sprite(
 pub struct CorrectArrowEvent {
     pub direction: Directions,
     pub points: usize,
+}
+
+type Arrows = Or<(With<Arrow>, With<TargetArrow>)>;
+fn despawn_all_arrows(mut cmd: Commands, q: Query<Entity, Arrows>) {
+    q.for_each(|e| cmd.entity(e).despawn_recursive());
 }

@@ -22,6 +22,9 @@ impl Plugin for MapMakerPlugin {
                     .with_system(save_key_presses.system())
                     .with_system(save_to_file.system())
                     .with_system(toggle_map_maker_arrows.system()),
+            )
+            .add_system_set(
+                SystemSet::on_exit(AppState::MakeMap).with_system(despawn_map_maker.system()),
             );
     }
 }
@@ -85,6 +88,16 @@ fn setup_map_maker(
         })
         .insert(MapMakeArrow(direction));
     }
+}
+// 销毁
+fn despawn_map_maker(
+    mut cmd: Commands,
+    q: Query<Entity, With<MapMakeArrow>>,
+    mut _audio: ResMut<Audio>,
+) {
+    q.for_each(|e| cmd.entity(e).despawn_recursive());
+    // invalid
+    // audio.queue.get_mut().clear();
 }
 
 // 按键点击时才显示

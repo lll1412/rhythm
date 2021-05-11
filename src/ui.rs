@@ -2,8 +2,8 @@ use bevy::prelude::*;
 
 use crate::consts::DELAY_SONG;
 use crate::score::ScoreResource;
-use crate::AppState;
 use crate::time::ControlledTime;
+use crate::AppState;
 
 pub struct UIPlugin;
 
@@ -14,7 +14,8 @@ impl Plugin for UIPlugin {
                 SystemSet::on_update(AppState::Game)
                     .with_system(update_time_text.system())
                     .with_system(update_score_text.system()),
-            );
+            )
+            .add_system_set(SystemSet::on_exit(AppState::Game).with_system(despawn_text.system()));
     }
 }
 
@@ -42,15 +43,17 @@ fn setup_ui(
     .with_children(|parent| {
         parent
             .spawn_bundle(TextBundle {
-                text: Text::with_section(
-                    "Time: 0.0",
-                    TextStyle {
-                        font: font.clone(),
-                        font_size: 40.0,
-                        color: Color::rgb(0.9, 0.9, 0.9),
-                    },
-                    TextAlignment::default(),
-                ),
+                text: Text {
+                    sections: vec![TextSection {
+                        value: "Time: 0.0".to_string(),
+                        style: TextStyle {
+                            font: font.clone(),
+                            font_size: 40.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    }],
+                    ..Default::default()
+                },
                 ..Default::default()
             })
             .insert(TimeText);
@@ -79,7 +82,7 @@ fn setup_ui(
                         font_size: 40.0,
                         color: Color::rgb(0.8, 0.8, 0.8),
                     },
-                    TextAlignment::default(),
+                    Default::default(),
                 ),
                 ..Default::default()
             })
@@ -106,4 +109,10 @@ fn update_score_text(
         let mut score_text = score_text.single_mut().unwrap();
         score_text.sections[0].value = format!("{}", *score_resource);
     }
+}
+
+type TimeOrScoreText = Or<(With<TimeText>, With<ScoreText>)>;
+
+fn despawn_text(mut cmd: Commands, q: Query<Entity, TimeOrScoreText>) {
+    q.for_each(|e| cmd.entity(e).despawn_recursive());
 }

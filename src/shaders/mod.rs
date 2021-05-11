@@ -8,8 +8,8 @@ use bevy::window::WindowResized;
 use background::*;
 use target_arrows::*;
 
-use crate::AppState;
 use crate::time::ControlledTime;
+use crate::AppState;
 
 mod background;
 mod target_arrows;
@@ -30,6 +30,9 @@ impl Plugin for ShadersPlugin {
                 .with_system(update_time.system())
                 .with_system(update_resolution.system())
                 .with_system(correct_event.system()),
+        )
+        .add_system_set(
+            SystemSet::on_exit(AppState::Game).with_system(despawn_background.system()),
         );
     }
 }
@@ -61,4 +64,7 @@ fn setup_render_graph(mut render_graph: ResMut<RenderGraph>) {
     render_graph
         .add_node_edge("inputs", base::node::MAIN_PASS)
         .unwrap();
+}
+fn despawn_background(mut cmd: Commands, q: Query<Entity, With<Background>>) {
+    q.for_each(|e| cmd.entity(e).despawn_recursive());
 }

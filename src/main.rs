@@ -37,6 +37,7 @@ fn main() {
         .add_state(AppState::Menu)
         .add_startup_system(setup.system())
         .add_system(exit_on_esc_system.system())
+        .add_system(back_menu.system())
         .add_plugin(ArrowsPlugin)
         .add_plugin(UIPlugin)
         .add_plugin(AudioPlugin)
@@ -58,4 +59,11 @@ enum AppState {
     Menu,
     Game,
     MakeMap,
+}
+
+/// 返回菜单
+fn back_menu(mut state: ResMut<State<AppState>>, key_input: Res<Input<KeyCode>>) {
+    if key_input.just_pressed(KeyCode::Back) && state.current() != &AppState::Menu {
+        state.set(AppState::Menu).unwrap();
+    }
 }
