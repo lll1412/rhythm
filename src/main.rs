@@ -5,6 +5,7 @@ use bevy::{input::system::exit_on_esc_system, prelude::*};
 use arrows::ArrowsPlugin;
 use audio::AudioPlugin;
 use consts::{WINDOW_HEIGHT, WINDOW_WIDTH};
+use map_maker::MapMakerPlugin;
 use menu::MenuPlugin;
 use score::ScoreResource;
 use shaders::ShadersPlugin;
@@ -14,6 +15,7 @@ use ui::UIPlugin;
 mod arrows;
 mod audio;
 mod consts;
+mod map_maker;
 mod menu;
 mod score;
 mod shaders;
@@ -41,6 +43,7 @@ fn main() {
         .add_plugin(ShadersPlugin)
         .add_plugin(MenuPlugin)
         .add_plugin(TimePlugin)
+        .add_plugin(MapMakerPlugin)
         .run();
 }
 

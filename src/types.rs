@@ -44,6 +44,15 @@ impl Directions {
             Directions::Right => -WINDOW_HEIGHT / 4.0,
         }
     }
+
+    pub const fn directions() -> [Directions; 4] {
+        [
+            Directions::Up,
+            Directions::Down,
+            Directions::Left,
+            Directions::Right,
+        ]
+    }
 }
 
 /// 箭头速度

@@ -158,12 +158,11 @@ fn move_arrows(time: Res<ControlledTime>, arrows: Query<(&mut Transform, &Arrow)
 struct TargetArrow;
 /// 初始化目标箭头
 fn setup_target_arrows(mut cmd: Commands, materials: Res<ArrowMaterialResource>) {
-    use Directions::*;
-    let directions = [Up, Down, Left, Right];
+    let directions = Directions::directions();
     for direction in directions.iter() {
         let sprite_bundle = spawn_arrow_sprite(
             materials.border_texture.clone(),
-            &direction,
+            direction,
             TARGET_POSITION,
         );
         cmd.spawn_bundle(sprite_bundle).insert(TargetArrow);
