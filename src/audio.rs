@@ -1,6 +1,7 @@
 use crate::types::SongConfig;
 use crate::AppState;
 use bevy::prelude::*;
+use crate::time::ControlledTime;
 
 pub struct AudioPlugin;
 
@@ -10,7 +11,7 @@ impl Plugin for AudioPlugin {
     }
 }
 
-fn play_song(audio: Res<Audio>, time: Res<Time>, config: Res<SongConfig>) {
+fn play_song(audio: Res<Audio>, time: Res<ControlledTime>, config: Res<SongConfig>) {
     let sec = time.seconds_since_startup();
     let sec_last = sec - time.delta_seconds_f64();
 

@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::consts::DELAY_SONG;
 use crate::score::ScoreResource;
 use crate::AppState;
+use crate::time::ControlledTime;
 
 pub struct UIPlugin;
 
@@ -87,7 +88,7 @@ fn setup_ui(
 }
 struct TimeText;
 /// 更新时间文本
-fn update_time_text(time: Res<Time>, mut time_text: Query<&mut Text, With<TimeText>>) {
+fn update_time_text(time: Res<ControlledTime>, mut time_text: Query<&mut Text, With<TimeText>>) {
     let sec = time.seconds_since_startup() - DELAY_SONG;
     if sec >= 0.0 {
         let mut time_text = time_text.single_mut().unwrap();

@@ -82,7 +82,7 @@ impl ArrowTime {
     pub fn new(arrow: &ArrowTimeToml) -> Self {
         let speed_value = arrow.speed.value();
         // 根据点击时间计算出生成箭头时间
-        let spawn_time = &arrow.click_time - (DISTANCE / speed_value) as f64;
+        let spawn_time = arrow.click_time - (DISTANCE / speed_value) as f64;
         Self {
             spawn_time,
             speed: arrow.speed,

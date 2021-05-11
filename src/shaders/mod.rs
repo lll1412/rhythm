@@ -9,6 +9,7 @@ use background::*;
 use target_arrows::*;
 
 use crate::AppState;
+use crate::time::ControlledTime;
 
 mod background;
 mod target_arrows;
@@ -42,7 +43,7 @@ pub struct ShaderInputs {
     resolution: Vec2,
 }
 /// 更新时间
-fn update_time(time: Res<Time>, nodes: Query<&mut ShaderInputs>) {
+fn update_time(time: Res<ControlledTime>, nodes: Query<&mut ShaderInputs>) {
     let time = time.seconds_since_startup();
     nodes.for_each_mut(|mut node| node.time = time as f32);
 }

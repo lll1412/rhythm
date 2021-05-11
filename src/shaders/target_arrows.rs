@@ -78,7 +78,7 @@ pub fn setup_target_arrows(
 pub fn correct_event(
     mut correct_event: EventReader<CorrectArrowEvent>,
     q: Query<(&TargetArrowSparkle, &mut TimeSinceLastCorrect)>,
-    time: Res<Time>,
+    time: Res<ControlledTime>,
 ) {
     correct_event.iter().for_each(|e| {
         q.for_each_mut(|(tas, mut lc)| {

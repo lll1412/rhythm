@@ -4,6 +4,7 @@ use crate::consts::*;
 use crate::score::ScoreResource;
 use crate::types::*;
 use crate::AppState;
+use crate::time::ControlledTime;
 
 pub struct ArrowsPlugin;
 
@@ -71,7 +72,7 @@ fn spawn_arrows(
     mut cmd: Commands,
     mut song_config: ResMut<SongConfig>,
     materials: Res<ArrowMaterialResource>,
-    time: Res<Time>,
+    time: Res<ControlledTime>,
 ) {
     // 从启动到现在的时间（减3 是因为歌曲在游戏开始3秒后播放）
     let sec = time.seconds_since_startup() - DELAY_SONG;
@@ -134,7 +135,7 @@ fn despawn_arrows(
     });
 }
 /// 移动箭头
-fn move_arrows(time: Res<Time>, arrows: Query<(&mut Transform, &Arrow)>) {
+fn move_arrows(time: Res<ControlledTime>, arrows: Query<(&mut Transform, &Arrow)>) {
     arrows.for_each_mut(|(mut transform, arrow)| {
         transform.translation.x += time.delta_seconds() * arrow.speed.value();
 

@@ -1,3 +1,5 @@
+#![warn(clippy::all)]
+
 use bevy::{input::system::exit_on_esc_system, prelude::*};
 
 use arrows::ArrowsPlugin;
@@ -6,6 +8,7 @@ use consts::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use menu::MenuPlugin;
 use score::ScoreResource;
 use shaders::ShadersPlugin;
+use time::TimePlugin;
 use ui::UIPlugin;
 
 mod arrows;
@@ -14,6 +17,7 @@ mod consts;
 mod menu;
 mod score;
 mod shaders;
+mod time;
 mod types;
 mod ui;
 
@@ -36,6 +40,7 @@ fn main() {
         .add_plugin(AudioPlugin)
         .add_plugin(ShadersPlugin)
         .add_plugin(MenuPlugin)
+        .add_plugin(TimePlugin)
         .run();
 }
 
